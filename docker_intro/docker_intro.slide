@@ -11,13 +11,15 @@ Jiang Jia
 - 3. docker-compose
 - 4. Docker source insight
 
-* 1. Docker vs VM
+* 1. Docker vs *
+
+* Docker vs VM
 
 container is a lightweight resource isolation tool
 .image content/Container_VM_Implementation.png 400 _ 
 
 
-* 1. Docker vs Kubernetes
+* Docker vs Kubernetes
 
 .image content/kubernetes_vs_docker.jpg 400 _ 
 
@@ -47,24 +49,27 @@ Acquired CoreOS in 2018
 ### CoreOS VS Docker容器大战，之容器引擎 https://www.kubernetes.org.cn/2250.html
 
 
-* Do not use Sub-subsection in slide
+* 2. Docker components
 
- 
+* logic components
 
-        I noticed the same, some time ago.
-        When I recall correctly, **Subsection and ***Sub-subsection only work for '.article' files and not for slides.
-        IMO that's ok; **Subsection and ***Sub-subsection are way too complicated for slides.
-from
+- image
+- container
+- network 
+  - port mapping
+- volume
 
-.link https://groups.google.com/forum/#!topic/golang-nuts/zWsRlLbYxuo google group discuss
+* processes
+18.03.0-ce
 
+- dockerd
+- docker/docker-cli
+- docker-contained
+- docker-contained-slim
+- docker-proxy
 
-* Content
+* Docker implemented in around 100 lines of bash
+.link https://github.com/p8952/bocker
 
-* Notes
-
-* Notes-1
-real notes 1
-
-* Notes-2
-real notes 2
+* 3. docker-compose
+* 4. Docker source insight
