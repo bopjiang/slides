@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mediawiki:
+    image: mediawiki:stable
+    restart: always
+    ports:
+      - 127.0.0.1:10080:80
+    links:
+      - database
+    volumes:
+      - ./data/images:/var/www/html/images
+      - ./data/sqlitedb:/var/www/data
+      - ./data/LocalSettings.php:/var/www/html/LocalSettings.php
+      # After initial setup, download LocalSettings.php to the same directory as
+      # this yaml and uncomment the following line and use compose to restart
+      # the mediawiki service
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+
+  database:
+      image: "mysql:5.7.21"
+      expose:
+        - "3306"
+      environment:
+        - MYSQL_ROOT_PASSWORD=defaultpassXXXXXX
