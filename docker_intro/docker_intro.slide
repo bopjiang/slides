@@ -18,6 +18,7 @@ Jiang Jia
 container is a lightweight resource isolation tool
 .image content/Container_VM_Implementation.png 400 _ 
 
+resource: CPU, RAM, Disk, Networking, GPU...
 
 * Docker vs Kubernetes
 
@@ -51,9 +52,21 @@ Acquired CoreOS in 2018, [[http://cri-o.io/][cri-o]],lightweight container runti
 * logic components
 
 - image
+[[https://docs.docker.com/registry/spec/manifest-v2-2/][Image Manifest V 2, Schema 2]]
+[[https://github.com/opencontainers/image-spec/blob/master/spec.md][Image Format Specification v1.0.0]], OCI(Open Container Initiative)
+
 - container
+[[https://github.com/opencontainers/runtime-spec/blob/master/spec.md][Open Container Initiative Runtime Specification v1.0.0]]
+[[https://github.com/opencontainers/runc][runc]]
+
 - network 
-  port mapping
+
+        bridge
+        host
+        overlay, VXLAN
+
+CNI ([[https://github.com/containernetworking/cni][Container Network Interface]])
+
 - volume
 
 * processes
@@ -64,6 +77,20 @@ version 18.03.0-ce
 - docker-contained
 - docker-contained-slim
 - docker-proxy
+
+* processes
+
+.image content/docker_process.png
+
+        dockerd,1002 -H fd://
+        ├─docker-containerd,1064 --config /var/run/docker/containerd/containerd.toml
+        │   ├─docker-containerd-shim,2268 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/5550f1f86859c7039b3c5227813718ff08201bd39057b51def39f0070dbd424e -address...
+        │   │   ├─prometheus,2350 --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles
+        │   ├─docker-containerd-shim,2270 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/fbe8a330106870e592d49c06c7018ba336bea9d4202dc60b553ff30cfe0362c7 -address...
+        │   │   ├─grafana-server,2336 --homepath=/usr/share/grafana --config=/etc/grafana/grafana.ini cfg:default.log.mode=console cfg:default.paths.data=/var/lib/grafana cfg:default.paths.logs=/var/log/grafana...
+        ├─docker-proxy,2212 -proto tcp -host-ip 0.0.0.0 -host-port 9090 -container-ip 172.24.0.2 -container-port 9090
+        ├─docker-proxy,2261 -proto tcp -host-ip 0.0.0.0 -host-port 3000 -container-ip 172.24.0.3 -container-port 3000
+
 
 * Docker implemented in around 100 lines of bash
 .link https://github.com/p8952/bocker
