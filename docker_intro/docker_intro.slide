@@ -26,7 +26,7 @@ container is a lightweight resource isolation tool
 * Docker vs Companies
 
 - CoreOS
-[[https://coreos.com/releases/][CoreOS]] Container Linux
+[[https://coreos.com/releases/][CoreOS]], Container Linux
 [[https://github.com/rkt/rkt][rkt]], a container engine for Linux
 [[https://github.com/etcd-io/etcd][etcd]] distributed reliable key-value store using RAFT
 [[https://github.com/coreos/flannel][flannel]], network fabric for container
@@ -34,17 +34,14 @@ container is a lightweight resource isolation tool
 - Google
 [[https://kubernetes.io/][kubernetes]], Operation System for Data Center.
 
-  an open-source system for automating deployment, scaling, and
-  management of containerized applications.
-
+  An system for automating deployment, scaling, and management of containerized applications.  
   Winner of the container orchestration war(Docker Swarm, Apache Mesos)
 
 - Redhat
+Acquired CoreOS in 2018, [[http://cri-o.io/][cri-o]],lightweight container runtime for kubernetes
 
-Acquired CoreOS in 2018
-
-[[http://cri-o.io/][cri-o]],lightweight container runtime for kubernetes
-
+- VMWare
+[[https://github.com/goharbor/harbor][harbor]], cloud native registry project 
 
 ### CoreOS VS Docker容器大战，之容器引擎 https://www.kubernetes.org.cn/2250.html
 
@@ -60,7 +57,7 @@ Acquired CoreOS in 2018
 - volume
 
 * processes
-18.03.0-ce
+version 18.03.0-ce
 
 - dockerd
 - docker/docker-cli
@@ -72,7 +69,7 @@ Acquired CoreOS in 2018
 .link https://github.com/p8952/bocker
 
 * Docker implemented in around 100 lines of bash
-.code -edit -numbers content/bocker /^function bocker_run/,/^}/
+.code -edit -numbers content/bocker.sh /^function bocker_run/,/^}/
 
 
 * 3. docker-compose
