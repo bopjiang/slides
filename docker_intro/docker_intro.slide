@@ -7,7 +7,7 @@ Jiang Jia
 * Content
 
 - 1. Docker vs *
-- 2. Docker components 
+- 2. Docker components
 - 3. docker-compose
 - 4. Docker source insight
 
@@ -16,13 +16,13 @@ Jiang Jia
 * Docker vs VM
 
 container is a lightweight resource isolation tool
-.image content/Container_VM_Implementation.png 400 _ 
+.image content/Container_VM_Implementation.png 400 _
 
 resource: CPU, RAM, Disk, Networking, GPU...
 
 * Docker vs Kubernetes
 
-.image content/kubernetes_vs_docker.jpg 400 _ 
+.image content/kubernetes_vs_docker.jpg 400 _
 
 * Docker vs Companies
 
@@ -35,14 +35,14 @@ resource: CPU, RAM, Disk, Networking, GPU...
 - Google
 [[https://kubernetes.io/][kubernetes]], Operation System for Data Center.
 
-  An system for automating deployment, scaling, and management of containerized applications.  
+  An system for automating deployment, scaling, and management of containerized applications.
   Winner of the container orchestration war(Docker Swarm, Apache Mesos)
 
 - Redhat
 Acquired CoreOS in 2018, [[http://cri-o.io/][cri-o]],lightweight container runtime for kubernetes
 
 - VMWare
-[[https://github.com/goharbor/harbor][harbor]], cloud native registry project 
+[[https://github.com/goharbor/harbor][harbor]], cloud native registry project
 
 ### CoreOS VS Docker容器大战，之容器引擎 https://www.kubernetes.org.cn/2250.html
 
@@ -61,11 +61,11 @@ Acquired CoreOS in 2018, [[http://cri-o.io/][cri-o]],lightweight container runti
 [[https://github.com/opencontainers/runtime-spec/blob/master/spec.md][Open Container Initiative Runtime Specification v1.0.0]]
 [[https://github.com/opencontainers/runc][runc]]
 
-- network 
+- network
 
-        bridge
-        host
-        overlay, VXLAN
+	bridge
+	host
+	overlay, VXLAN
 
 CNI ([[https://github.com/containernetworking/cni][Container Network Interface]])
 
@@ -88,14 +88,14 @@ version 18.03.0-ce
 
 .image content/docker_process.png
 
-        dockerd,1002 -H fd://
-        ├─docker-containerd,1064 --config /var/run/docker/containerd/containerd.toml
-        │   ├─docker-containerd-shim,2268 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/5550f1f86859c7039b3c5227813718ff08201bd39057b51def39f0070dbd424e -address...
-        │   │   ├─prometheus,2350 --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles
-        │   ├─docker-containerd-shim,2270 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/fbe8a330106870e592d49c06c7018ba336bea9d4202dc60b553ff30cfe0362c7 -address...
-        │   │   ├─grafana-server,2336 --homepath=/usr/share/grafana --config=/etc/grafana/grafana.ini cfg:default.log.mode=console cfg:default.paths.data=/var/lib/grafana cfg:default.paths.logs=/var/log/grafana...
-        ├─docker-proxy,2212 -proto tcp -host-ip 0.0.0.0 -host-port 9090 -container-ip 172.24.0.2 -container-port 9090
-        ├─docker-proxy,2261 -proto tcp -host-ip 0.0.0.0 -host-port 3000 -container-ip 172.24.0.3 -container-port 3000
+	dockerd,1002 -H fd://
+	├─docker-containerd,1064 --config /var/run/docker/containerd/containerd.toml
+	│   ├─docker-containerd-shim,2268 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/5550f1f86859c7039b3c5227813718ff08201bd39057b51def39f0070dbd424e -address...
+	│   │   ├─prometheus,2350 --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles
+	│   ├─docker-containerd-shim,2270 -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/fbe8a330106870e592d49c06c7018ba336bea9d4202dc60b553ff30cfe0362c7 -address...
+	│   │   ├─grafana-server,2336 --homepath=/usr/share/grafana --config=/etc/grafana/grafana.ini cfg:default.log.mode=console cfg:default.paths.data=/var/lib/grafana cfg:default.paths.logs=/var/log/grafana...
+	├─docker-proxy,2212 -proto tcp -host-ip 0.0.0.0 -host-port 9090 -container-ip 172.24.0.2 -container-port 9090
+	├─docker-proxy,2261 -proto tcp -host-ip 0.0.0.0 -host-port 3000 -container-ip 172.24.0.3 -container-port 3000
 
 
 * Docker implemented in around 100 lines of bash
@@ -112,4 +112,90 @@ version 18.03.0-ce
 
 * 4. Docker source insight
 
+* docker create (Docker version 18.03-ce)
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/cli/cmd/docker/docker.go#L154][cli/cmd/docker/docker.go]]
 
+	func main() {
+
+		cmd := newDockerCommand(dockerCli)
+
+	func newDockerCommand(dockerCli *command.DockerCli) *cobra.Command {
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/cli/cli/command/commands/commands.go#L27:1][cli/cli/command/commands/commands.go]]
+
+	func AddCommands(cmd *cobra.Command, dockerCli command.Cli) {
+
+		// container
+		container.NewContainerCommand(dockerCli),
+		container.NewRunCommand(dockerCli),
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/cli/cli/command/container/cmd.go#L21:1][cli/cli/command/container/cmd.go]]
+
+	func NewContainerCommand(dockerCli command.Cli) *cobra.Command {
+
+		cmd.AddCommand(
+			NewCreateCommand(dockerCli),
+
+* docker create
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/cli/cli/command/container/create.go#L30:6][cli/cli/command/container/create.go]]
+
+	func NewCreateCommand(dockerCli command.Cli) *cobra.Command {
+
+			return runCreate(dockerCli, cmd.Flags(), &opts, copts)
+
+	func runCreate(dockerCli command.Cli, flags *pflag.FlagSet, opts *createOptions, copts *containerOptions) error {
+
+		response, err := createContainer(context.Background(), dockerCli, containerConfig, opts)
+
+	func createContainer(ctx context.Context, dockerCli command.Cli, containerConfig *containerConfig, opts *createOptions) (*container.ContainerCreateCreatedBody, error) {
+
+		response, err := dockerCli.Client().ContainerCreate(ctx, config, hostConfig, networkingConfig, opts.name)
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/engine/client/container_create.go#L22:20][docker/docker/client/container_create.go]]
+
+
+	func (cli *Client) ContainerCreate(ctx context.Context, config *container.Config, hostConfig *container.HostConfig, networkingConfig *network.NetworkingConfig, containerName string) (container.ContainerCreateCreatedBody, error) {
+
+	       	serverResp, err := cli.post(ctx, "/containers/create", query, body, nil)
+
+* docker create
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/engine/api/server/router/container/container.go#L31:5][engine/api/server/router/container/container.go]]
+	
+	func (r *containerRouter) initRoutes() {
+
+		router.NewPostRoute("/containers/{name:.*}/start", r.postContainersStart),
+		router.NewPostRoute("/containers/create", r.postContainersCreate),
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/engine/api/server/router/container/container_routes.go#L446:27][engine/api/server/router/container/container_routes.go]]
+
+	func (s *containerRouter) postContainersCreate(ctx context.Context, w http.ResponseWriter, r *http.Request, vars map[string]string) error {
+		ccr, err := s.backend.ContainerCreate(types.ContainerCreateConfig{
+				Name:             name,
+				Config:           config,
+				HostConfig:       hostConfig,
+				NetworkingConfig: networkingConfig,
+				AdjustCPUShares:  adjustCPUShares,
+			})
+
+* docker create
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/engine/daemon/create.go#L33:22][engine/daemon/create.go]]		
+
+	func (daemon *Daemon) ContainerCreate(params types.ContainerCreateConfig) (containertypes.ContainerCreateCreatedBody, error) {
+		return daemon.containerCreate(params, false)
+	}
+
+	func (daemon *Daemon) containerCreate(params types.ContainerCreateConfig, managed bool) (containertypes.ContainerCreateCreatedBody, error) {
+		container, err := daemon.create(params, managed)
+
+	func (daemon *Daemon) create(params types.ContainerCreateConfig, managed bool) (retC *container.Container, retErr error) {
+		if container, err = daemon.newContainer(params.Name, os, params.Config, params.HostConfig, imgID, managed); err != nil {
+			return nil, err
+		}
+
+[[https://sourcegraph.com/github.com/docker/docker-ce@18.03/-/blob/components/engine/daemon/container.go#L128:22][engine/daemon/container.go]]
+
+	func (daemon *Daemon) newContainer(name string, operatingSystem string, config *containertypes.Config, hostConfig *containertypes.HostConfig, imgID image.ID, managed bool) (*container.Container, error) {
+
+* docker run
+todo
