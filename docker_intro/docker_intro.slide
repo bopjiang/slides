@@ -69,6 +69,10 @@ CNI ([[https://github.com/containernetworking/cni][Container Network Interface]]
 
 - volume
 
+* Dockerfile
+from TiDB project:
+.code content/tidb-Dockerfile
+
 * processes
 version 18.03.0-ce
 
