@@ -1,0 +1,52 @@
+$ tidb git:(master) docker build .
+Sending build context to Docker daemon  112.5MB
+Step 1/10 : FROM golang:1.10.1-alpine as builder
+1.10.1-alpine: Pulling from library/golang
+ff3a5c916c92: Already exists
+f32d2ea73378: Already exists
+c6678747892c: Pull complete
+16b5f22d8b23: Pull complete
+Digest: sha256:356aea725be911d52e0f2f0344a17ac3d97c54c74d50b8561f58eae6cc0871bf
+Status: Downloaded newer image for golang:1.10.1-alpine
+ ---> 52d894fca6d4
+Step 2/10 : RUN apk add --no-cache     make     git
+ ---> Running in 878c7f531bee
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz
+(1/6) Installing libssh2 (1.8.0-r2)
+(2/6) Installing libcurl (7.61.1-r0)
+(3/6) Installing expat (2.2.5-r0)
+(4/6) Installing pcre2 (10.30-r0)
+(5/6) Installing git (2.15.3-r0)
+(6/6) Installing make (4.2.1-r0)
+Executing busybox-1.27.2-r7.trigger
+OK: 19 MiB in 18 packages
+Removing intermediate container 878c7f531bee
+ ---> b860ee5417e7
+Step 3/10 : COPY . /go/src/github.com/pingcap/tidb
+ ---> e3a6f25f0447
+Step 4/10 : WORKDIR /go/src/github.com/pingcap/tidb/
+Removing intermediate container b68065a00296
+ ---> cb0deac65a4e
+Step 5/10 : RUN make
+ ---> Running in 1a370d16b0d4
+CGO_ENABLED=0 go build   -ldflags '-X "github.com/pingcap/parser/mysql.TiDBReleaseVersion=v2.1.0-rc.3-107-g3024a5af7" -X "github.com/pingcap/tidb/util/printer.TiDBBuildTS=2018-10-26 07:20:20" -X "github.com/pingcap/tidb/util/printer.TiDBGitHash=3024a5af73cea7e648651908e4266b6b2a4dda24" -X "github.com/pingcap/tidb/util/printer.TiDBGitBranch=master" -X "github.com/pingcap/tidb/util/printer.GoVersion=go version go1.10.1 linux/amd64" ' -o bin/tidb-server tidb-server/main.go
+Build TiDB Server successfully!
+Removing intermediate container 1a370d16b0d4
+ ---> 924e0987bf98
+Step 6/10 : FROM scratch
+ --->
+Step 7/10 : COPY --from=builder /go/src/github.com/pingcap/tidb/bin/tidb-server /tidb-server
+ ---> 3ad6b3fe03c1
+Step 8/10 : WORKDIR /
+Removing intermediate container 07776f90edc7
+ ---> 8ff6ddcf01e7
+Step 9/10 : EXPOSE 4000
+ ---> Running in 66930ffaac85
+Removing intermediate container 66930ffaac85
+ ---> 16a73f4415ee
+Step 10/10 : ENTRYPOINT ["/tidb-server"]
+ ---> Running in 8b843f690ef6
+Removing intermediate container 8b843f690ef6
+ ---> be09f9da3391
+Successfully built be09f9da3391

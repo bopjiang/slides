@@ -55,6 +55,8 @@ Acquired CoreOS in 2018, [[http://cri-o.io/][cri-o]],lightweight container runti
 [[https://docs.docker.com/registry/spec/manifest-v2-2/][Image Manifest V 2, Schema 2]]
 [[https://github.com/opencontainers/image-spec/blob/master/spec.md][Image Format Specification v1.0.0]], OCI(Open Container Initiative)
 
+# image id = $sha256hash.json, including layer, commands in Dockerfile.
+
 - container
 [[https://github.com/opencontainers/runtime-spec/blob/master/spec.md][Open Container Initiative Runtime Specification v1.0.0]]
 [[https://github.com/opencontainers/runc][runc]]
@@ -70,7 +72,7 @@ CNI ([[https://github.com/containernetworking/cni][Container Network Interface]]
 - volume
 
 * Dockerfile
-from TiDB project:
+from [[https://github.com/pingcap/tidb/blob/master/Dockerfile][TiDB]] project:
 .code content/tidb-Dockerfile
 
 * processes
